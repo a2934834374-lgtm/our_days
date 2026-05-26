@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase'
 import { MOOD_CONFIG, PLANT_STAGES } from '../types'
 import type { Mood, PlantStage } from '../types'
 import BottomNav from '../components/BottomNav'
+import { Heart, Droplets, Sparkles, Camera, PiggyBank } from 'lucide-react'
 
 export default function Home() {
   const { user, partnerId } = useAuth()
@@ -53,15 +54,11 @@ export default function Home() {
       return
     }
 
-    // check who watered today
     const todayWaterings = waterings.filter(w => w.watered_at.slice(0, 10) === today)
     setIWateredToday(todayWaterings.some(w => w.user_id === user!.id))
     setPartnerWateredToday(todayWaterings.some(w => w.user_id === partnerId))
 
-    // deduplicate dates for streak calculation
     const dates = [...new Set(waterings.map(w => w.watered_at.slice(0, 10)))].sort().reverse()
-
-    // check if no watering for 2+ days → wilted
     const lastWateredDate = dates[0]
     const daysSinceLastWater = Math.floor((new Date(today).getTime() - new Date(lastWateredDate).getTime()) / 86400000)
 
@@ -71,13 +68,9 @@ export default function Home() {
       return
     }
 
-    // count consecutive days from today backwards
     let streak = 0
     const d = new Date(today)
-    // start from yesterday if not watered today
-    if (dates[0] !== today) {
-      d.setDate(d.getDate() - 1)
-    }
+    if (dates[0] !== today) d.setDate(d.getDate() - 1)
     for (const dateStr of dates) {
       const expected = d.toISOString().slice(0, 10)
       if (dateStr === expected) {
@@ -132,91 +125,122 @@ export default function Home() {
 
   const stage = PLANT_STAGES[plantStage]
   const progress = savingsGoal ? Math.min(savingsGoal.current / savingsGoal.target * 100, 100) : 0
+  const bothWatered = iWateredToday && partnerWateredToday
 
   return (
-    <div className="min-h-screen bg-cream pb-20">
-      <div className="px-5 pt-8 pb-4">
-        <h1 className="text-2xl font-bold text-warm">我们的日子 🏠</h1>
+    <div className="min-h-screen bg-gradient-to-b from-rose-50/50 via-orange-50/30 to-amber-50/50 pb-20">
+      {/* Header */}
+      <div className="px-5 pt-6 pb-2 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-800">我们的日子</h1>
+          <p className="text-xs text-orange-400 mt-0.5">今天也要开心呀</p>
+        </div>
+        <div className="flex items-center gap-1.5 bg-white rounded-full px-3 py-1.5 shadow-sm border border-orange-100/60">
+          <Sparkles size={14} className="text-orange-400" strokeWidth={1.5} />
+          <span className="text-xs font-medium text-gray-500">
+            连续 {streakDays} 天
+          </span>
+        </div>
       </div>
 
-      <div className="px-5 space-y-5">
-        {/* Mood Bar */}
-        <div className="bg-white rounded-3xl p-4 shadow-sm">
-          <p className="text-xs text-gray-400 mb-3">今日心情</p>
-          <div className="flex items-center gap-4">
+      <div className="px-5 space-y-4">
+        {/* Mood Card */}
+        <div className="bg-white rounded-[28px] p-5 shadow-sm border border-orange-100/40">
+          <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-4">今日心情</p>
+          <div className="flex items-center gap-6">
             {/* My mood */}
             <div className="flex-1 text-center">
               {myMood ? (
-                <div className="flex flex-col items-center gap-1">
-                  <span className="text-3xl">{MOOD_CONFIG[myMood.mood_type]?.emoji}</span>
-                  <span className="text-xs text-gray-500">{MOOD_CONFIG[myMood.mood_type]?.label}</span>
-                </div>
+                <button onClick={() => setShowMoodPicker(!showMoodPicker)} className="flex flex-col items-center gap-1.5 mx-auto">
+                  <span className="text-4xl">{MOOD_CONFIG[myMood.mood_type]?.emoji}</span>
+                  <span className="text-xs font-medium text-gray-600">{MOOD_CONFIG[myMood.mood_type]?.label}</span>
+                </button>
               ) : (
-                <button onClick={() => setShowMoodPicker(!showMoodPicker)} className="text-3xl opacity-40 hover:opacity-80 transition-opacity">❓</button>
+                <button onClick={() => setShowMoodPicker(!showMoodPicker)} className="flex flex-col items-center gap-1.5 mx-auto group">
+                  <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center group-hover:bg-orange-50 transition-colors border border-dashed border-gray-200 group-hover:border-orange-200">
+                    <span className="text-2xl opacity-30 group-hover:opacity-60">?</span>
+                  </div>
+                  <span className="text-xs text-gray-400">点击记录</span>
+                </button>
               )}
-              <p className="text-xs text-gray-400 mt-1">我</p>
+              <p className="text-[10px] text-gray-400 mt-2">我</p>
             </div>
-            <div className="text-gray-300">♥</div>
+
+            <Heart size={20} className="text-rose-300 shrink-0" strokeWidth={1.5} fill="#fecdd3" />
+
             {/* Partner mood */}
             <div className="flex-1 text-center">
               {partnerMood ? (
-                <div className="flex flex-col items-center gap-1">
-                  <span className="text-3xl">{MOOD_CONFIG[partnerMood.mood_type]?.emoji}</span>
-                  <span className="text-xs text-gray-500">{MOOD_CONFIG[partnerMood.mood_type]?.label}</span>
+                <div className="flex flex-col items-center gap-1.5">
+                  <span className="text-4xl">{MOOD_CONFIG[partnerMood.mood_type]?.emoji}</span>
+                  <span className="text-xs font-medium text-gray-600">{MOOD_CONFIG[partnerMood.mood_type]?.label}</span>
                 </div>
               ) : (
-                <div className="flex flex-col items-center gap-1">
-                  <span className="text-3xl opacity-30">❓</span>
+                <div className="flex flex-col items-center gap-1.5">
+                  <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center border border-dashed border-gray-200">
+                    <span className="text-2xl opacity-20">?</span>
+                  </div>
                   <span className="text-xs text-gray-400">未设置</span>
                 </div>
               )}
-              <p className="text-xs text-gray-400 mt-1">ta</p>
+              <p className="text-[10px] text-gray-400 mt-2">ta</p>
             </div>
           </div>
-          {/* Mood picker popup */}
+
+          {/* Mood picker */}
           {showMoodPicker && (
-            <div className="flex gap-2 justify-center mt-3 pt-3 border-t border-gray-100 flex-wrap">
+            <div className="flex gap-1.5 justify-center mt-5 pt-4 border-t border-gray-50 flex-wrap">
               {Object.entries(MOOD_CONFIG).map(([key, { emoji, label }]) => (
-                <button key={key} onClick={() => setMood(key)} className="text-2xl p-1.5 hover:scale-125 transition-transform active:scale-90" title={label}>
-                  {emoji}
+                <button key={key} onClick={() => setMood(key)}
+                  className="flex flex-col items-center gap-1 p-2 rounded-2xl hover:bg-orange-50 transition-colors active:scale-90 min-w-[52px]"
+                  title={label}
+                >
+                  <span className="text-2xl">{emoji}</span>
+                  <span className="text-[9px] text-gray-400 font-medium">{label}</span>
                 </button>
               ))}
             </div>
           )}
         </div>
 
-        {/* Plant */}
-        <div className="bg-white rounded-3xl p-6 shadow-sm text-center relative overflow-hidden">
+        {/* Plant Card */}
+        <div className="bg-white rounded-[28px] p-6 shadow-sm border border-orange-100/40 text-center relative overflow-hidden">
           {showHearts && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-4xl heart-float pointer-events-none">💧</div>
           )}
-          <p className="text-xs text-gray-400 mb-2">我们的花</p>
-          <div className={`text-7xl mb-3 ${plantStage !== 'wilted' ? 'plant-wiggle' : 'opacity-60'}`}>
+          <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-3">我们的花</p>
+          <div className={`text-7xl mb-3 transition-all duration-500 ${plantStage !== 'wilted' ? 'plant-wiggle drop-shadow-sm' : 'opacity-50 grayscale'}`}>
             {stage.emoji}
           </div>
-          <p className="text-sm font-semibold text-gray-700">{stage.label}</p>
+          <p className="text-[17px] font-semibold tracking-tight text-gray-800">{stage.label}</p>
           <p className="text-xs text-gray-400 mt-1">
             {plantStage === 'wilted'
-              ? '花花快渴死了，快浇水吧 😢'
-              : streakDays > 0
-                ? `连续浇水 ${streakDays} 天 🔥`
-                : '今天还没浇水哦～'}
+              ? '花花快渴死了，快去浇水吧 😢'
+              : bothWatered
+                ? '今天你们都已浇水，花花很开心 ✨'
+                : streakDays > 0
+                  ? `已连续浇水 ${streakDays} 天 🔥`
+                  : '今天还没浇水哦'}
           </p>
           {/* Watering status */}
-          <div className="flex justify-center gap-4 mt-1 text-xs text-gray-400">
-            <span>{iWateredToday ? '✅ 我浇过了' : '我还没浇'}</span>
-            <span>{partnerWateredToday ? '✅ ta浇过了' : 'ta还没浇'}</span>
+          <div className="flex justify-center gap-6 mt-2 mb-1">
+            <span className={`text-xs font-medium flex items-center gap-1 ${iWateredToday ? 'text-green-500' : 'text-gray-400'}`}>
+              <Droplets size={12} strokeWidth={1.5} /> {iWateredToday ? '我浇过了' : '我还没浇'}
+            </span>
+            <span className={`text-xs font-medium flex items-center gap-1 ${partnerWateredToday ? 'text-green-500' : 'text-gray-400'}`}>
+              <Droplets size={12} strokeWidth={1.5} /> {partnerWateredToday ? 'ta浇过了' : 'ta还没浇'}
+            </span>
           </div>
           <button
             onClick={waterPlant}
             disabled={iWateredToday}
-            className={`mt-3 px-6 py-2 rounded-full text-sm font-semibold transition-all ${
+            className={`mt-4 px-8 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
               iWateredToday
-                ? 'bg-gray-100 text-gray-400'
-                : 'bg-blue-100 text-blue-500 hover:bg-blue-200 active:scale-95'
+                ? 'bg-gray-100 text-gray-400 cursor-default'
+                : 'bg-gradient-to-r from-sky-400 to-blue-500 text-white shadow-sm shadow-blue-200/50 hover:shadow-md active:scale-95'
             }`}
           >
-            {iWateredToday ? '今天已浇水 ✅' : '💧 浇水'}
+            {iWateredToday ? '今天已浇水 ✓' : '💧 给花浇水'}
           </button>
         </div>
 
@@ -224,30 +248,39 @@ export default function Home() {
         {savingsGoal && (
           <div
             onClick={() => navigate(`/savings/${savingsGoal.id}`)}
-            className="bg-white rounded-3xl p-4 shadow-sm active:scale-[0.98] transition-transform cursor-pointer"
+            className="bg-white rounded-[24px] p-5 shadow-sm border border-orange-100/40 active:scale-[0.98] transition-transform cursor-pointer group"
           >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold text-gray-700">{savingsGoal.emoji} {savingsGoal.title}</span>
-              <span className="text-xs text-gray-400">
-                ¥{savingsGoal.current.toLocaleString()} / ¥{savingsGoal.target.toLocaleString()}
-              </span>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-2xl bg-amber-50 flex items-center justify-center text-xl">
+                  {savingsGoal.emoji}
+                </div>
+                <div>
+                  <span className="text-sm font-semibold text-gray-800 block">{savingsGoal.title}</span>
+                  <span className="text-[11px] text-gray-400">{Math.round(progress)}% 完成</span>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-lg font-semibold text-gray-800 tracking-tight">¥{savingsGoal.current.toLocaleString()}</span>
+                <span className="text-[11px] text-gray-400 block">/ ¥{savingsGoal.target.toLocaleString()}</span>
+              </div>
             </div>
             <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-amber to-warm rounded-full transition-all duration-700"
+                className="h-full bg-gradient-to-r from-amber-300 to-orange-400 rounded-full transition-all duration-700"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="text-xs text-right mt-1 text-gray-400">{Math.round(progress)}%</p>
           </div>
         )}
 
         {!savingsGoal && (
           <button
             onClick={() => navigate('/savings')}
-            className="w-full bg-white rounded-3xl p-4 shadow-sm text-center text-gray-400 text-sm hover:text-warm transition-colors"
+            className="w-full bg-white rounded-[24px] p-5 shadow-sm border border-dashed border-orange-200/80 text-center hover:border-orange-300 transition-all group"
           >
-            + 创建一个攒钱目标吧
+            <PiggyBank size={24} className="mx-auto mb-2 text-orange-300 group-hover:text-orange-400 transition-colors" strokeWidth={1.5} />
+            <span className="text-sm text-gray-400 group-hover:text-gray-500 font-medium">创建一个攒钱目标吧</span>
           </button>
         )}
 
@@ -255,17 +288,23 @@ export default function Home() {
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => navigate('/moments')}
-            className="bg-white rounded-2xl p-4 text-center shadow-sm hover:shadow transition-shadow"
+            className="bg-white rounded-[20px] p-5 shadow-sm border border-orange-100/40 hover:border-orange-200/60 transition-all group"
           >
-            <div className="text-2xl mb-1">📸</div>
-            <div className="text-xs text-gray-500">我们的动态</div>
+            <div className="w-10 h-10 rounded-2xl bg-rose-50 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+              <Camera size={20} className="text-rose-400" strokeWidth={1.5} />
+            </div>
+            <div className="text-[13px] font-semibold text-gray-700">我们的动态</div>
+            <div className="text-[11px] text-gray-400 mt-0.5">记录美好时刻</div>
           </button>
           <button
             onClick={() => navigate('/savings')}
-            className="bg-white rounded-2xl p-4 text-center shadow-sm hover:shadow transition-shadow"
+            className="bg-white rounded-[20px] p-5 shadow-sm border border-orange-100/40 hover:border-orange-200/60 transition-all group"
           >
-            <div className="text-2xl mb-1">🐷</div>
-            <div className="text-xs text-gray-500">攒钱计划</div>
+            <div className="w-10 h-10 rounded-2xl bg-amber-50 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+              <PiggyBank size={20} className="text-amber-400" strokeWidth={1.5} />
+            </div>
+            <div className="text-[13px] font-semibold text-gray-700">攒钱计划</div>
+            <div className="text-[11px] text-gray-400 mt-0.5">为目标努力</div>
           </button>
         </div>
       </div>

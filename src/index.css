@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+  --color-warm: #f97316;
+  --color-warm-light: #fff5f0;
+  --color-pink: #f472b6;
+  --color-pink-light: #fdf2f8;
+  --color-cream: #fff5f0;
+  --color-amber: #fbbf24;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background: #fff5f0;
+  color: #1a1a2e;
+}
+
+input, textarea, button {
+  font-family: inherit;
+}
+
+.plant-wiggle {
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg); }
+  75% { transform: rotate(-2deg); }
+}
+
+.heart-float {
+  animation: floatUp 1.5s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-60px) scale(1.5); }
+}

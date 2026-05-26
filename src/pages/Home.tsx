@@ -149,9 +149,9 @@ export default function Home() {
           <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-5">今日心情</p>
           <div className="flex items-center gap-6">
             {/* My mood */}
-            <div className="flex-1 text-center">
+            <div className="flex-1 flex flex-col items-center">
               {myMood ? (
-                <button onClick={() => setShowMoodPicker(!showMoodPicker)} className="flex flex-col items-center mx-auto group relative">
+                <button onClick={() => setShowMoodPicker(!showMoodPicker)} className="flex flex-col items-center group relative">
                   <div className="h-14 flex items-center justify-center">
                     <span className="text-4xl group-hover:scale-110 transition-transform">{MOOD_CONFIG[myMood.mood_type]?.emoji}</span>
                   </div>
@@ -159,7 +159,7 @@ export default function Home() {
                   <span className="text-[9px] text-gray-300 absolute -bottom-3 left-1/2 -translate-x-1/2 hidden group-hover:block whitespace-nowrap">点击更换</span>
                 </button>
               ) : (
-                <button onClick={() => setShowMoodPicker(!showMoodPicker)} className="flex flex-col items-center mx-auto group">
+                <button onClick={() => setShowMoodPicker(!showMoodPicker)} className="flex flex-col items-center group">
                   <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center group-hover:bg-orange-50 transition-colors border border-dashed border-gray-200 group-hover:border-orange-200">
                     <span className="text-2xl opacity-30 group-hover:opacity-60">?</span>
                   </div>
@@ -172,7 +172,7 @@ export default function Home() {
             <Heart size={22} className="text-rose-300 shrink-0" strokeWidth={1.5} fill="#fecdd3" />
 
             {/* Partner mood */}
-            <div className="flex-1 text-center">
+            <div className="flex-1 flex flex-col items-center">
               {partnerMood ? (
                 <div className="flex flex-col items-center">
                   <div className="h-14 flex items-center justify-center">

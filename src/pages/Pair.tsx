@@ -13,8 +13,10 @@ export default function Pair() {
   async function createInvite() {
     if (!user) return
     setLoading(true)
-    // generate a 6-char code from the user_id
-    const code = user.id.slice(0, 6).toUpperCase()
+    // generate random 8-char code
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    const randomBytes = crypto.getRandomValues(new Uint8Array(8))
+    const code = Array.from(randomBytes, b => chars[b % chars.length]).join('')
     const { error: err } = await supabase.from('invite_codes').insert({
       code,
       created_by: user.id,

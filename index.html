@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/our_days/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>我们的日子</title>
+    <script>
+      (function(){
+        var r = sessionStorage.getItem('redirect');
+        sessionStorage.removeItem('redirect');
+        if (r && r !== location.pathname + location.search + location.hash) {
+          history.replaceState(null, null, r);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/our_days/assets/index-Cmo5OCd1.js"></script>
+    <link rel="stylesheet" crossorigin href="/our_days/assets/index-aAn3NBGD.css">
+  <link rel="manifest" href="/our_days/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/our_days/registerSW.js"></script></head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

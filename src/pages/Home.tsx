@@ -152,8 +152,10 @@ export default function Home() {
             <div className="flex-1 text-center">
               {myMood ? (
                 <button onClick={() => setShowMoodPicker(!showMoodPicker)} className="flex flex-col items-center mx-auto group relative">
-                  <span className="text-4xl group-hover:scale-110 transition-transform">{MOOD_CONFIG[myMood.mood_type]?.emoji}</span>
-                  <span className="text-xs font-medium text-gray-600 mt-1">{MOOD_CONFIG[myMood.mood_type]?.label}</span>
+                  <div className="h-14 flex items-center justify-center">
+                    <span className="text-4xl group-hover:scale-110 transition-transform">{MOOD_CONFIG[myMood.mood_type]?.emoji}</span>
+                  </div>
+                  <span className="text-xs font-medium text-gray-600">{MOOD_CONFIG[myMood.mood_type]?.label}</span>
                   <span className="text-[9px] text-gray-300 absolute -bottom-3 left-1/2 -translate-x-1/2 hidden group-hover:block whitespace-nowrap">点击更换</span>
                 </button>
               ) : (
@@ -161,7 +163,7 @@ export default function Home() {
                   <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center group-hover:bg-orange-50 transition-colors border border-dashed border-gray-200 group-hover:border-orange-200">
                     <span className="text-2xl opacity-30 group-hover:opacity-60">?</span>
                   </div>
-                  <span className="text-xs text-gray-400 mt-1.5">点击记录心情</span>
+                  <span className="text-xs text-gray-400 mt-1">点击记录心情</span>
                 </button>
               )}
               <p className="text-[10px] text-gray-400 mt-2 font-medium">我</p>
@@ -173,15 +175,17 @@ export default function Home() {
             <div className="flex-1 text-center">
               {partnerMood ? (
                 <div className="flex flex-col items-center">
-                  <span className="text-4xl">{MOOD_CONFIG[partnerMood.mood_type]?.emoji}</span>
-                  <span className="text-xs font-medium text-gray-600 mt-1">{MOOD_CONFIG[partnerMood.mood_type]?.label}</span>
+                  <div className="h-14 flex items-center justify-center">
+                    <span className="text-4xl">{MOOD_CONFIG[partnerMood.mood_type]?.emoji}</span>
+                  </div>
+                  <span className="text-xs font-medium text-gray-600">{MOOD_CONFIG[partnerMood.mood_type]?.label}</span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
                   <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center border border-dashed border-gray-200">
                     <span className="text-2xl opacity-20">?</span>
                   </div>
-                  <span className="text-xs text-gray-400 mt-1.5">ta还没记录</span>
+                  <span className="text-xs text-gray-400 mt-1">ta还没记录</span>
                 </div>
               )}
               <p className="text-[10px] text-gray-400 mt-2 font-medium">ta</p>

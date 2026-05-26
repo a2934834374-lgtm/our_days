@@ -3,6 +3,9 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "rewrites": [
+    { "source": "/rest/v1/(.*)", "destination": "https://jshjwlxjplwuskzaqiah.supabase.co/rest/v1/$1" },
+    { "source": "/auth/v1/(.*)", "destination": "https://jshjwlxjplwuskzaqiah.supabase.co/auth/v1/$1" },
+    { "source": "/storage/v1/(.*)", "destination": "https://jshjwlxjplwuskzaqiah.supabase.co/storage/v1/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

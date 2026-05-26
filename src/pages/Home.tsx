@@ -143,35 +143,36 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="px-5 space-y-4">
+      <div className="px-5 space-y-5">
         {/* Mood Card */}
-        <div className="bg-white rounded-[28px] p-5 shadow-sm border border-orange-100/40">
-          <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-4">今日心情</p>
+        <div className="bg-white rounded-[28px] p-6 shadow-sm border border-orange-100/40">
+          <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-5">今日心情</p>
           <div className="flex items-center gap-6">
             {/* My mood */}
             <div className="flex-1 text-center">
               {myMood ? (
-                <button onClick={() => setShowMoodPicker(!showMoodPicker)} className="flex flex-col items-center gap-1.5 mx-auto">
-                  <span className="text-4xl">{MOOD_CONFIG[myMood.mood_type]?.emoji}</span>
+                <button onClick={() => setShowMoodPicker(!showMoodPicker)} className="flex flex-col items-center gap-1 mx-auto group">
+                  <span className="text-4xl group-hover:scale-110 transition-transform">{MOOD_CONFIG[myMood.mood_type]?.emoji}</span>
                   <span className="text-xs font-medium text-gray-600">{MOOD_CONFIG[myMood.mood_type]?.label}</span>
+                  <span className="text-[9px] text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity">点击更换</span>
                 </button>
               ) : (
                 <button onClick={() => setShowMoodPicker(!showMoodPicker)} className="flex flex-col items-center gap-1.5 mx-auto group">
                   <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center group-hover:bg-orange-50 transition-colors border border-dashed border-gray-200 group-hover:border-orange-200">
                     <span className="text-2xl opacity-30 group-hover:opacity-60">?</span>
                   </div>
-                  <span className="text-xs text-gray-400">点击记录</span>
+                  <span className="text-xs text-gray-400">点击记录心情</span>
                 </button>
               )}
-              <p className="text-[10px] text-gray-400 mt-2">我</p>
+              <p className="text-[10px] text-gray-400 mt-2 font-medium">我</p>
             </div>
 
-            <Heart size={20} className="text-rose-300 shrink-0" strokeWidth={1.5} fill="#fecdd3" />
+            <Heart size={22} className="text-rose-300 shrink-0" strokeWidth={1.5} fill="#fecdd3" />
 
             {/* Partner mood */}
             <div className="flex-1 text-center">
               {partnerMood ? (
-                <div className="flex flex-col items-center gap-1.5">
+                <div className="flex flex-col items-center gap-1">
                   <span className="text-4xl">{MOOD_CONFIG[partnerMood.mood_type]?.emoji}</span>
                   <span className="text-xs font-medium text-gray-600">{MOOD_CONFIG[partnerMood.mood_type]?.label}</span>
                 </div>
@@ -180,19 +181,19 @@ export default function Home() {
                   <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center border border-dashed border-gray-200">
                     <span className="text-2xl opacity-20">?</span>
                   </div>
-                  <span className="text-xs text-gray-400">未设置</span>
+                  <span className="text-xs text-gray-400">ta还没记录</span>
                 </div>
               )}
-              <p className="text-[10px] text-gray-400 mt-2">ta</p>
+              <p className="text-[10px] text-gray-400 mt-2 font-medium">ta</p>
             </div>
           </div>
 
           {/* Mood picker */}
           {showMoodPicker && (
-            <div className="flex gap-1.5 justify-center mt-5 pt-4 border-t border-gray-50 flex-wrap">
+            <div className="flex gap-1 justify-center mt-6 pt-5 border-t border-orange-50 flex-wrap">
               {Object.entries(MOOD_CONFIG).map(([key, { emoji, label }]) => (
                 <button key={key} onClick={() => setMood(key)}
-                  className="flex flex-col items-center gap-1 p-2 rounded-2xl hover:bg-orange-50 transition-colors active:scale-90 min-w-[52px]"
+                  className="flex flex-col items-center gap-1 p-2.5 rounded-2xl hover:bg-orange-50 transition-colors active:scale-90 min-w-[52px]"
                   title={label}
                 >
                   <span className="text-2xl">{emoji}</span>
@@ -204,16 +205,16 @@ export default function Home() {
         </div>
 
         {/* Plant Card */}
-        <div className="bg-white rounded-[28px] p-6 shadow-sm border border-orange-100/40 text-center relative overflow-hidden">
+        <div className="bg-white rounded-[28px] p-7 shadow-sm border border-orange-100/40 text-center relative overflow-hidden">
           {showHearts && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-4xl heart-float pointer-events-none">💧</div>
           )}
-          <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-3">我们的花</p>
-          <div className={`text-7xl mb-3 transition-all duration-500 ${plantStage !== 'wilted' ? 'plant-wiggle drop-shadow-sm' : 'opacity-50 grayscale'}`}>
+          <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-4">我们的花</p>
+          <div className={`text-7xl mb-4 transition-all duration-500 ${plantStage !== 'wilted' ? 'plant-wiggle drop-shadow-sm' : 'opacity-50 grayscale'}`}>
             {stage.emoji}
           </div>
           <p className="text-[17px] font-semibold tracking-tight text-gray-800">{stage.label}</p>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-sm text-gray-400 mt-1.5">
             {plantStage === 'wilted'
               ? '花花快渴死了，快去浇水吧 😢'
               : bothWatered
@@ -223,18 +224,18 @@ export default function Home() {
                   : '今天还没浇水哦'}
           </p>
           {/* Watering status */}
-          <div className="flex justify-center gap-6 mt-2 mb-1">
-            <span className={`text-xs font-medium flex items-center gap-1 ${iWateredToday ? 'text-green-500' : 'text-gray-400'}`}>
-              <Droplets size={12} strokeWidth={1.5} /> {iWateredToday ? '我浇过了' : '我还没浇'}
+          <div className="flex justify-center gap-8 mt-3 mb-1">
+            <span className={`text-sm font-medium flex items-center gap-1.5 ${iWateredToday ? 'text-green-500' : 'text-gray-400'}`}>
+              <Droplets size={14} strokeWidth={1.5} /> {iWateredToday ? '我浇过了' : '我还没浇'}
             </span>
-            <span className={`text-xs font-medium flex items-center gap-1 ${partnerWateredToday ? 'text-green-500' : 'text-gray-400'}`}>
-              <Droplets size={12} strokeWidth={1.5} /> {partnerWateredToday ? 'ta浇过了' : 'ta还没浇'}
+            <span className={`text-sm font-medium flex items-center gap-1.5 ${partnerWateredToday ? 'text-green-500' : 'text-gray-400'}`}>
+              <Droplets size={14} strokeWidth={1.5} /> {partnerWateredToday ? 'ta浇过了' : 'ta还没浇'}
             </span>
           </div>
           <button
             onClick={waterPlant}
             disabled={iWateredToday}
-            className={`mt-4 px-8 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+            className={`mt-5 px-8 py-3 rounded-full text-[15px] font-semibold transition-all duration-300 ${
               iWateredToday
                 ? 'bg-gray-100 text-gray-400 cursor-default'
                 : 'bg-gradient-to-r from-sky-400 to-blue-500 text-white shadow-sm shadow-blue-200/50 hover:shadow-md active:scale-95'

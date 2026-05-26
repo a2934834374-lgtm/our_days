@@ -71,9 +71,9 @@ export default function Moments() {
         </button>
       </div>
 
-      <div className="px-5 space-y-3.5">
+      <div className="px-5 space-y-5">
         {moments.length === 0 && (
-          <div className="text-center py-20">
+          <div className="text-center py-24">
             <div className="w-16 h-16 rounded-2xl bg-rose-50 flex items-center justify-center mx-auto mb-4 border border-dashed border-rose-200">
               <Camera size={28} className="text-rose-300" strokeWidth={1.5} />
             </div>
@@ -83,17 +83,17 @@ export default function Moments() {
         )}
 
         {moments.map(m => (
-          <div key={m.id} className="bg-white rounded-[24px] p-5 shadow-sm border border-orange-100/40">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-300 to-rose-400 flex items-center justify-center text-white text-xs font-semibold shadow-sm">
+          <div key={m.id} className="bg-white rounded-[24px] p-6 shadow-sm border border-orange-100/40">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-300 to-rose-400 flex items-center justify-center text-white text-sm font-semibold shadow-sm shrink-0">
                 {(m.nickname || '?')[0].toUpperCase()}
               </div>
-              <div>
+              <div className="min-w-0">
                 <span className="text-sm font-semibold text-gray-700">{m.nickname || '我'}</span>
+                <p className="text-[11px] text-gray-400 font-medium">
+                  {new Date(m.created_at).toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                </p>
               </div>
-              <span className="text-[11px] text-gray-400 ml-auto font-medium">
-                {new Date(m.created_at).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-              </span>
             </div>
             <p className="text-gray-700 leading-relaxed text-[15px]">{m.content}</p>
           </div>

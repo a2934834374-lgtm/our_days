@@ -41,7 +41,7 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/our_days">
       <AuthProvider>
         <div className="max-w-lg mx-auto min-h-screen bg-cream shadow-lg relative overflow-hidden">
           <AppRoutes />
